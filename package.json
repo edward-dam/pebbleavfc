@@ -5,12 +5,12 @@
         "pebblejs": "^1.0.0"
     },
     "keywords": [],
-    "name": "avfc-v1.0",
+    "name": "avfc-v1.1",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "AVFC v1.0",
+        "displayName": "AVFC v1.1",
         "enableMultiJS": true,
         "messageKeys": [
             "message_keys"
@@ -31,6 +31,7 @@
                 },
                 {
                     "file": "images/menu_icon.png",
+                    "menuIcon": true,
                     "name": "MENU_ICON",
                     "targetPlatforms": [
                         "aplite",
@@ -54,5 +55,5 @@
             "watchface": false
         }
     },
-    "version": "1.0.0"
+    "version": "1.1.0"
 }
