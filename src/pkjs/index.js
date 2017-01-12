@@ -124,8 +124,8 @@ mainWind.on('click', 'select', function(e) {
   });
 
   // live score screen
-  var liveScore = "vs";
-  var liveFooter = "unknown";
+  var liveScore;
+  var liveState;
   var liveStatus = api[1].status;
   var liveDate = api[1].date.substr(0, 10);
   var liveHomeTeam = api[1].homeTeamName.substr(0, 3).toUpperCase();
@@ -138,12 +138,15 @@ mainWind.on('click', 'select', function(e) {
   //console.log('liveAwayTeam: ' + liveAwayTeam);
   //console.log('liveHomeGoals: ' + liveHomeGoals);
   //console.log('liveAwayGoals: ' + liveAwayGoals);
-  if ((liveStatus === 'TIMED') || (liveStatus === 'SCHEDULED')) {
-    liveScore = "vs";
-    liveFooter = liveDate;
-  } else if (liveStatus === "FINISHED") {
+  if (liveStatus === "FINISHED") {
     liveScore = liveHomeGoals + "-" + liveAwayGoals;
-    liveFooter = "Full-Time";
+    liveState = "Full-Time";
+  } else if (liveStatus === "IN_PLAY") {
+    liveScore = liveHomeGoals + "-" + liveAwayGoals;
+    liveState = "In-Play";
+  } else {
+    liveScore = "vs";
+    liveState = liveDate;
   }
   var liveWind = new UI.Window();
   var liveHead = new UI.Text({
@@ -171,7 +174,7 @@ mainWind.on('click', 'select', function(e) {
     textAlign: 'center',
     color: 'white',
     font: 'gothic-14-bold',
-    text: liveFooter
+    text: liveState
   });
   liveWind.add(liveHead);
   liveWind.add(liveText);
