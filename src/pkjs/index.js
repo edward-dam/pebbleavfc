@@ -99,7 +99,10 @@ mainWind.on('click', 'select', function(e) {
   
   // live score screen
   var liveStatus = apidata[1].status;
-  var liveDate = apidata[1].date.substr(0, 10);
+  var liveTime = apidata[1].date.substr(11, 5);
+  var liveDay = apidata[1].date.substr(8, 2);
+  var liveMonth = apidata[1].date.substr(5, 2);
+  var liveDate =  liveDay + '/' + liveMonth + ' @' + liveTime;
   var liveHomeTeam = apidata[1].homeTeamName.substr(0, 3).toUpperCase();
   var liveAwayTeam = apidata[1].awayTeamName.substr(0, 3).toUpperCase();
   var liveHomeGoals = apidata[1].result.goalsHomeTeam;
@@ -140,13 +143,16 @@ mainWind.on('click', 'select', function(e) {
   liveWind.show();
   
   // result screen
-  var resultDate = apidata[0].date.substr(0, 10);
+  var resultTime = apidata[0].date.substr(11, 5);
+  var resultDay = apidata[0].date.substr(8, 2);
+  var resultMonth = apidata[0].date.substr(5, 2);
+  var resultDate =  resultDay + '/' + resultMonth + ' @' + resultTime;
   var resultHomeTeam = apidata[0].homeTeamName.substr(0, 3).toUpperCase();
   var resultAwayTeam = apidata[0].awayTeamName.substr(0, 3).toUpperCase();
   var resultHomeGoals = apidata[0].result.goalsHomeTeam;
   var resultAwayGoals = apidata[0].result.goalsAwayTeam;
   var resultScore = resultHomeGoals + "-" + resultAwayGoals;
-  //console.log(resultDate);
+  //console.log(resultTime);
   liveWind.on('click', 'up', function(e) {
     var resultWind = new UI.Window();
     var resultHead = new UI.Text({
@@ -179,10 +185,13 @@ mainWind.on('click', 'select', function(e) {
   });
   
   // fixture screen
-  var fixtureDate = apidata[2].date.substr(0, 10);
+  var fixtureTime = apidata[2].date.substr(11, 5);
+  var fixtureDay = apidata[2].date.substr(8, 2);
+  var fixtureMonth = apidata[2].date.substr(5, 2);
+  var fixtureDate =  fixtureDay + '/' + fixtureMonth + ' @' + fixtureTime;
   var fixtureHomeTeam = apidata[2].homeTeamName.substr(0, 3).toUpperCase();
   var fixtureAwayTeam = apidata[2].awayTeamName.substr(0, 3).toUpperCase();
-  //console.log(fixtureDate);
+  //console.log(fixtureTime);
   liveWind.on('click', 'down', function(e) {
     var fixtureWind = new UI.Window();
     var fixtureHead = new UI.Text({
