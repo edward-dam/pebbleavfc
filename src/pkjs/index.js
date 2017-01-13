@@ -14,6 +14,13 @@ var Vector2  = require('pebblejs/lib/vector2');
 var ajax     = require('pebblejs/lib/ajax');
 var Settings = require('pebblejs/settings');
 
+// api data
+var matchDay;
+var token = 'fbaf269c163c46fe8f6fb73afa1e4a45';
+//console.log('Saved apidata: ' + Settings.data('avfcapi'));
+collectmatchdayweek();
+collectapidata();
+
 // definitions
 var window = new UI.Window();
 var windowSize = window.size();
@@ -85,42 +92,18 @@ mainWind.on('click', 'down', function(e) {
 
 // select screen
 mainWind.on('click', 'select', function(e) {
-  
-  // api collection
-  var matchDay;
-  var api = Settings.data();
-  var token = 'fbaf269c163c46fe8f6fb73afa1e4a45';
-  ajax({
-    url: 'http://api.football-data.org/v1/competitions/427',
-    headers: { 'X-Auth-Token': token }, type: 'json'
-  },function(api){
-    matchDay = api.currentMatchday;
-  });
-  ajax({
-    url: 'http://api.football-data.org/v1/teams/58/fixtures',
-    headers: { 'X-Auth-Token': token }, type: 'json'
-  },function(api){
-    var result = api.fixtures.filter(function(val, index, array) {
-      return val.matchday === matchDay - 1;
-    });
-    var live = api.fixtures.filter(function(val, index, array) {
-      return val.matchday === matchDay;
-    });
-    var fixture = api.fixtures.filter(function(val, index, array) {
-      return val.matchday === matchDay + 1;
-    });
-    var data = result.concat(live).concat(fixture);
-    Settings.data(data);
-  });
-  //console.log(matchDay);
 
+  // load collected api data
+  var apidata = Settings.data('avfcapi');
+  //console.log('Loaded apidata: ' + apidata);
+  
   // live score screen
-  var liveStatus = api[1].status;
-  var liveDate = api[1].date.substr(0, 10);
-  var liveHomeTeam = api[1].homeTeamName.substr(0, 3).toUpperCase();
-  var liveAwayTeam = api[1].awayTeamName.substr(0, 3).toUpperCase();
-  var liveHomeGoals = api[1].result.goalsHomeTeam;
-  var liveAwayGoals = api[1].result.goalsAwayTeam;
+  var liveStatus = apidata[1].status;
+  var liveDate = apidata[1].date.substr(0, 10);
+  var liveHomeTeam = apidata[1].homeTeamName.substr(0, 3).toUpperCase();
+  var liveAwayTeam = apidata[1].awayTeamName.substr(0, 3).toUpperCase();
+  var liveHomeGoals = apidata[1].result.goalsHomeTeam;
+  var liveAwayGoals = apidata[1].result.goalsAwayTeam;
   //console.log(liveStatus);
   var liveState;
   var liveScore = liveHomeGoals + '-' + liveAwayGoals;
@@ -157,11 +140,11 @@ mainWind.on('click', 'select', function(e) {
   liveWind.show();
   
   // result screen
-  var resultDate = api[0].date.substr(0, 10);
-  var resultHomeTeam = api[0].homeTeamName.substr(0, 3).toUpperCase();
-  var resultAwayTeam = api[0].awayTeamName.substr(0, 3).toUpperCase();
-  var resultHomeGoals = api[0].result.goalsHomeTeam;
-  var resultAwayGoals = api[0].result.goalsAwayTeam;
+  var resultDate = apidata[0].date.substr(0, 10);
+  var resultHomeTeam = apidata[0].homeTeamName.substr(0, 3).toUpperCase();
+  var resultAwayTeam = apidata[0].awayTeamName.substr(0, 3).toUpperCase();
+  var resultHomeGoals = apidata[0].result.goalsHomeTeam;
+  var resultAwayGoals = apidata[0].result.goalsAwayTeam;
   var resultScore = resultHomeGoals + "-" + resultAwayGoals;
   //console.log(resultDate);
   liveWind.on('click', 'up', function(e) {
@@ -196,9 +179,9 @@ mainWind.on('click', 'select', function(e) {
   });
   
   // fixture screen
-  var fixtureDate = api[2].date.substr(0, 10);
-  var fixtureHomeTeam = api[2].homeTeamName.substr(0, 3).toUpperCase();
-  var fixtureAwayTeam = api[2].awayTeamName.substr(0, 3).toUpperCase();
+  var fixtureDate = apidata[2].date.substr(0, 10);
+  var fixtureHomeTeam = apidata[2].homeTeamName.substr(0, 3).toUpperCase();
+  var fixtureAwayTeam = apidata[2].awayTeamName.substr(0, 3).toUpperCase();
   //console.log(fixtureDate);
   liveWind.on('click', 'down', function(e) {
     var fixtureWind = new UI.Window();
@@ -232,3 +215,35 @@ mainWind.on('click', 'select', function(e) {
   });
 
 });
+
+// functions
+
+function collectmatchdayweek() {
+  var url = 'http://api.football-data.org/v1/competitions/427';
+  ajax({ url: url, headers: { 'X-Auth-Token': token }, type: 'json' },
+    function(api){
+      matchDay = api.currentMatchday;
+      //console.log('Collected matchDay: ' + matchDay);
+    }
+  );
+}
+
+function collectapidata() {
+  var url = 'http://api.football-data.org/v1/teams/58/fixtures';
+  ajax({ url: url, headers: { 'X-Auth-Token': token }, type: 'json' },
+    function(api){
+      var result = api.fixtures.filter(function(val, index, array) {
+        return val.matchday === matchDay - 1;
+      });
+      var live = api.fixtures.filter(function(val, index, array) {
+        return val.matchday === matchDay;
+      });
+      var fixture = api.fixtures.filter(function(val, index, array) {
+        return val.matchday === matchDay + 1;
+      });
+      var data = result.concat(live).concat(fixture);
+      Settings.data('avfcapi', data);
+      //console.log('Collected apidata: ' + data);
+    }
+  );
+}
