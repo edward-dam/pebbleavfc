@@ -15,8 +15,9 @@
 https://apps.getpebble.com/applications/587534e5e09e6393ec000704
 
 ###description
-Check the Aston Villa Score!<br /><br />
-
+<br />
+Check the Aston Villa Score!<br />
+<br />
 Press select to view the latest score
 - Scroll up to view the previous result
 - Scroll down to view the next fixture
