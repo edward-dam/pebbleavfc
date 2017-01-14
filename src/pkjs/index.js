@@ -14,7 +14,7 @@ var Vector2  = require('pebblejs/lib/vector2');
 var ajax     = require('pebblejs/lib/ajax');
 var Settings = require('pebblejs/settings');
 
-// api data
+// collect api data
 var matchDay;
 var token = 'fbaf269c163c46fe8f6fb73afa1e4a45';
 //console.log('Saved apidata: ' + Settings.data('avfcapi'));
@@ -37,13 +37,11 @@ function position(height){
 
 // main screen
 var mainWind = new UI.Window();
-var mainText = new UI.Text({
-  size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-  font: fontLarge
-});
+var mainText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
 var mainImage = new UI.Image({size: size});
 mainText.position(position(-75));
 mainImage.position(position(-70));
+mainText.font(fontLarge);
 mainText.text('AVFC');
 mainImage.image('images/splash.png');
 mainWind.add(mainText);
@@ -53,16 +51,12 @@ mainWind.show();
 // up screen
 mainWind.on('click', 'up', function(e) {
   var upWind = new UI.Window();
-  var upHead = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontLarge
-  });
-  var upText = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontMedium
-  });
+  var upHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+  var upText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
   upHead.position(position(-35));
   upText.position(position(-5));
+  upHead.font(fontLarge);
+  upText.font(fontMedium);
   upHead.text('Aston Villa');
   upText.text('Supporters Club');
   upWind.add(upHead);
@@ -73,16 +67,12 @@ mainWind.on('click', 'up', function(e) {
 // down screen
 mainWind.on('click', 'down', function(e) {
   var downWind = new UI.Window();
-  var downHead = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontMedium
-  });
-  var downText = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontSmall
-  });
+  var downHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+  var downText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
   downHead.position(position(-30));
   downText.position(position(-5));
+  downHead.font(fontMedium);
+  downText.font(fontSmall);
   downHead.text('AVFC v1.1');
   downText.text('by Edward Dam');
   downWind.add(downHead);
@@ -97,7 +87,7 @@ mainWind.on('click', 'select', function(e) {
   var apidata = Settings.data('avfcapi');
   //console.log('Loaded apidata: ' + apidata);
   
-  // live score screen
+  // determine live data
   var liveStatus = apidata[1].status;
   var liveTime = apidata[1].date.substr(11, 5);
   var liveDay = apidata[1].date.substr(8, 2);
@@ -118,31 +108,8 @@ mainWind.on('click', 'select', function(e) {
     liveState = liveDate;
     liveScore = "vs";
   }
-  var liveWind = new UI.Window();
-  var liveHead = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontLarge
-  });
-  var liveText = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontMedium
-  });
-  var liveInfo = new UI.Text({
-    size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-    font: fontXSmall
-  });
-  liveHead.position(position(-45));
-  liveText.position(position(-5));
-  liveInfo.position(position(20));
-  liveHead.text('Live Score');
-  liveText.text(liveHomeTeam + ' ' + liveScore + ' ' + liveAwayTeam);
-  liveInfo.text(liveState);
-  liveWind.add(liveHead);
-  liveWind.add(liveText);
-  liveWind.add(liveInfo);
-  liveWind.show();
   
-  // result screen
+  // determine result data
   var resultTime = apidata[0].date.substr(11, 5);
   var resultDay = apidata[0].date.substr(8, 2);
   var resultMonth = apidata[0].date.substr(5, 2);
@@ -153,23 +120,47 @@ mainWind.on('click', 'select', function(e) {
   var resultAwayGoals = apidata[0].result.goalsAwayTeam;
   var resultScore = resultHomeGoals + "-" + resultAwayGoals;
   //console.log(resultTime);
+  
+  // determine fixture data
+  var fixtureTime = apidata[2].date.substr(11, 5);
+  var fixtureDay = apidata[2].date.substr(8, 2);
+  var fixtureMonth = apidata[2].date.substr(5, 2);
+  var fixtureDate =  fixtureDay + '/' + fixtureMonth + ' @' + fixtureTime;
+  var fixtureHomeTeam = apidata[2].homeTeamName.substr(0, 3).toUpperCase();
+  var fixtureAwayTeam = apidata[2].awayTeamName.substr(0, 3).toUpperCase();
+  //console.log(fixtureTime);
+  
+  // live score screen
+  var liveWind = new UI.Window();
+  var liveHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+  var liveText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+  var liveInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+  liveHead.position(position(-45));
+  liveText.position(position(-5));
+  liveInfo.position(position(20));
+  liveHead.font(fontLarge);
+  liveText.font(fontMedium);
+  liveInfo.font(fontXSmall);
+  liveHead.text('Live Score');
+  liveText.text(liveHomeTeam + ' ' + liveScore + ' ' + liveAwayTeam);
+  liveInfo.text(liveState);
+  liveWind.add(liveHead);
+  liveWind.add(liveText);
+  liveWind.add(liveInfo);
+  liveWind.show();
+  
+  // result screen
   liveWind.on('click', 'up', function(e) {
     var resultWind = new UI.Window();
-    var resultHead = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontLarge
-    });
-    var resultText = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontMedium
-    });
-    var resultInfo = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontXSmall
-    });
+    var resultHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var resultText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var resultInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
     resultHead.position(position(-45));
     resultText.position(position(-5));
     resultInfo.position(position(20));
+    resultHead.font(fontLarge);
+    resultText.font(fontMedium);
+    resultInfo.font(fontXSmall);
     resultHead.text('Result');
     resultText.text(resultHomeTeam + ' ' + resultScore + ' ' + resultAwayTeam);
     resultInfo.text(resultDate);
@@ -185,30 +176,17 @@ mainWind.on('click', 'select', function(e) {
   });
   
   // fixture screen
-  var fixtureTime = apidata[2].date.substr(11, 5);
-  var fixtureDay = apidata[2].date.substr(8, 2);
-  var fixtureMonth = apidata[2].date.substr(5, 2);
-  var fixtureDate =  fixtureDay + '/' + fixtureMonth + ' @' + fixtureTime;
-  var fixtureHomeTeam = apidata[2].homeTeamName.substr(0, 3).toUpperCase();
-  var fixtureAwayTeam = apidata[2].awayTeamName.substr(0, 3).toUpperCase();
-  //console.log(fixtureTime);
   liveWind.on('click', 'down', function(e) {
     var fixtureWind = new UI.Window();
-    var fixtureHead = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontLarge
-    });
-    var fixtureText = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontMedium
-    });
-    var fixtureInfo = new UI.Text({
-      size: size, backgroundColor: backgroundColor, textAlign: textAlign,
-      font: fontXSmall
-    });
+    var fixtureHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var fixtureText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var fixtureInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
     fixtureHead.position(position(-45));
     fixtureText.position(position(-5));
     fixtureInfo.position(position(20));
+    fixtureHead.font(fontLarge);
+    fixtureText.font(fontMedium);
+    fixtureInfo.font(fontXSmall);
     fixtureHead.text('Fixture');
     fixtureText.text(fixtureHomeTeam + ' vs ' + fixtureAwayTeam);
     fixtureInfo.text(fixtureDate);
