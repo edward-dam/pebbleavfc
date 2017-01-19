@@ -18,8 +18,7 @@ var Settings = require('pebblejs/settings');
 var matchDay;
 var token = 'fbaf269c163c46fe8f6fb73afa1e4a45';
 //console.log('Saved apidata: ' + Settings.data('avfcapi'));
-collectmatchdayweek();
-collectapidata();
+collectmatchdayweek(collectapidata);
 
 // definitions
 var window = new UI.Window();
@@ -205,12 +204,13 @@ mainWind.on('click', 'select', function(e) {
 
 // functions
 
-function collectmatchdayweek() {
+function collectmatchdayweek(callback) {
   var url = 'http://api.football-data.org/v1/competitions/427';
   ajax({ url: url, headers: { 'X-Auth-Token': token }, type: 'json' },
     function(api){
       matchDay = api.currentMatchday;
       //console.log('Collected matchDay: ' + matchDay);
+      callback();
     }
   );
 }
