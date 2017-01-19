@@ -147,6 +147,7 @@ mainWind.on('click', 'select', function(e) {
   liveWind.add(liveText);
   liveWind.add(liveInfo);
   liveWind.show();
+  mainWind.hide();
   
   // result screen
   liveWind.on('click', 'up', function(e) {
