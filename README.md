@@ -1,4 +1,4 @@
-# pebbleavfcapp
+# pebbleavfcscore
 ###screenshots
 
 ![basalt.png](/assets/basalt.png)
