@@ -1,4 +1,9 @@
 # pebbleavfcscore
+###icons
+
+![icon-144.png](/assets/icon-144.png)
+![icon-48.png](/assets/icon-48.png)
+
 ###screenshots
 
 ![basalt.png](/assets/basalt.png)
