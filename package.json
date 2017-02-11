@@ -5,12 +5,12 @@
         "pebblejs": "^1.0.0"
     },
     "keywords": [],
-    "name": "avfc-v1.1",
+    "name": "avfc-v2.0",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "AVFC v1.1",
+        "displayName": "AVFC v2.0",
         "enableMultiJS": true,
         "messageKeys": [
             "message_keys"
@@ -18,6 +18,17 @@
         "projectType": "native",
         "resources": {
             "media": [
+                {
+                    "file": "images/football_icon.png",
+                    "name": "FOOTBALL_ICON",
+                    "targetPlatforms": [
+                        "aplite",
+                        "basalt",
+                        "chalk",
+                        "diorite"
+                    ],
+                    "type": "bitmap"
+                },
                 {
                     "file": "images/splash.png",
                     "name": "SPLASH",
@@ -55,5 +66,5 @@
             "watchface": false
         }
     },
-    "version": "1.17.0"
+    "version": "2.0.0"
 }

@@ -24,7 +24,11 @@ collectmatchdayweek(collectapidata);
 var window = new UI.Window();
 var windowSize = window.size();
 var size = new Vector2(windowSize.x, windowSize.y);
+var icon = 'images/football_icon.png';
 var backgroundColor = 'black';
+var highlightBackgroundColor = 'white';
+var textColor = 'white';
+var highlightTextColor = 'black';
 var textAlign = 'center';
 var fontLarge = 'gothic-28-bold';
 var fontMedium = 'gothic-24-bold';
@@ -72,7 +76,7 @@ mainWind.on('click', 'down', function(e) {
   downText.position(position(-5));
   downHead.font(fontMedium);
   downText.font(fontSmall);
-  downHead.text('AVFC v1.1');
+  downHead.text('AVFC v2.0');
   downText.text('by Edward Dam');
   downWind.add(downHead);
   downWind.add(downText);
@@ -86,119 +90,92 @@ mainWind.on('click', 'select', function(e) {
   var apidata = Settings.data('avfcapi');
   //console.log('Loaded apidata: ' + apidata);
   
-  // determine live data
-  var liveStatus = apidata[1].status;
-  var liveTime = apidata[1].date.substr(11, 5);
-  var liveDay = apidata[1].date.substr(8, 2);
-  var liveMonth = apidata[1].date.substr(5, 2);
-  var liveDate =  liveDay + '/' + liveMonth + ' @' + liveTime;
-  var liveHomeTeam = apidata[1].homeTeamName.substr(0, 3).toUpperCase();
-  var liveAwayTeam = apidata[1].awayTeamName.substr(0, 3).toUpperCase();
-  var liveHomeGoals = apidata[1].result.goalsHomeTeam;
-  var liveAwayGoals = apidata[1].result.goalsAwayTeam;
-  //console.log(liveStatus);
-  var liveState;
-  var liveScore = liveHomeGoals + '-' + liveAwayGoals;
-  if (liveStatus === "FINISHED") {
-    liveState = "Full-Time";
-  } else if (liveStatus === "IN_PLAY") {
-    liveState = "In-Play";
-  } else {
-    liveState = liveDate;
-    liveScore = "vs";
+  // determine data
+  for (var i = 0; i < apidata.length; i++) {
+    var status = apidata[i].status;
+    var time = apidata[i].date.substr(11, 5);
+    var day = apidata[i].date.substr(8, 2);
+    var month = apidata[i].date.substr(5, 2);
+    var date = day + '/' + month + ' @' + time;
+    var homeTeam = apidata[i].homeTeamName;
+    var awayTeam = apidata[i].awayTeamName;
+    if ( homeTeam === "Brighton & Hove Albion") {
+      homeTeam = "BHA";
+    } else {
+      homeTeam = homeTeam.substr(0, 3).toUpperCase();
+    }
+    if ( awayTeam === "Brighton & Hove Albion") {
+      awayTeam = "BHA";
+    } else {
+      awayTeam = awayTeam.substr(0, 3).toUpperCase();
+    }
+    var homeGoals = apidata[i].result.goalsHomeTeam;
+    var awayGoals = apidata[i].result.goalsAwayTeam;
+    var score = ' ' + homeGoals + '-' + awayGoals + ' ';
+    var title = homeTeam + score + awayTeam;
+    var subtitle = date;
+    if (status === "FINISHED") {
+      subtitle = "Full-Time";
+    } else if (status === "IN_PLAY") {
+      subtitle = "In-Play";
+    } else {
+      title = homeTeam + " vs " + awayTeam;
+    }
+    window["matchTitle" + i] = title;
+    window["matchSubtitle" + i] = subtitle;
   }
-  
-  // determine result data
-  var resultTime = apidata[0].date.substr(11, 5);
-  var resultDay = apidata[0].date.substr(8, 2);
-  var resultMonth = apidata[0].date.substr(5, 2);
-  var resultDate =  resultDay + '/' + resultMonth + ' @' + resultTime;
-  var resultHomeTeam = apidata[0].homeTeamName.substr(0, 3).toUpperCase();
-  var resultAwayTeam = apidata[0].awayTeamName.substr(0, 3).toUpperCase();
-  var resultHomeGoals = apidata[0].result.goalsHomeTeam;
-  var resultAwayGoals = apidata[0].result.goalsAwayTeam;
-  var resultScore = resultHomeGoals + "-" + resultAwayGoals;
-  //console.log(resultTime);
-  
-  // determine fixture data
-  var fixtureTime = apidata[2].date.substr(11, 5);
-  var fixtureDay = apidata[2].date.substr(8, 2);
-  var fixtureMonth = apidata[2].date.substr(5, 2);
-  var fixtureDate =  fixtureDay + '/' + fixtureMonth + ' @' + fixtureTime;
-  var fixtureHomeTeam = apidata[2].homeTeamName.substr(0, 3).toUpperCase();
-  var fixtureAwayTeam = apidata[2].awayTeamName.substr(0, 3).toUpperCase();
-  //console.log(fixtureTime);
-  
-  // live score screen
-  var liveWind = new UI.Window();
-  var liveHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-  var liveText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-  var liveInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-  liveHead.position(position(-45));
-  liveText.position(position(-5));
-  liveInfo.position(position(20));
-  liveHead.font(fontLarge);
-  liveText.font(fontMedium);
-  liveInfo.font(fontXSmall);
-  liveHead.text('Live Score');
-  liveText.text(liveHomeTeam + ' ' + liveScore + ' ' + liveAwayTeam);
-  liveInfo.text(liveState);
-  liveWind.add(liveHead);
-  liveWind.add(liveText);
-  liveWind.add(liveInfo);
-  liveWind.show();
-  mainWind.hide();
-  
-  // result screen
-  liveWind.on('click', 'up', function(e) {
-    var resultWind = new UI.Window();
-    var resultHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    var resultText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    var resultInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    resultHead.position(position(-45));
-    resultText.position(position(-5));
-    resultInfo.position(position(20));
-    resultHead.font(fontLarge);
-    resultText.font(fontMedium);
-    resultInfo.font(fontXSmall);
-    resultHead.text('Result');
-    resultText.text(resultHomeTeam + ' ' + resultScore + ' ' + resultAwayTeam);
-    resultInfo.text(resultDate);
-    resultWind.add(resultHead);
-    resultWind.add(resultText);
-    resultWind.add(resultInfo);
-    resultWind.show();
-    liveWind.hide();
-    resultWind.on('click', 'down', function(e) {
-      liveWind.show();
-      resultWind.hide();
-    });
+
+  // display menu
+  var footballMenu = new UI.Menu({ //fullscreen: true,
+    textColor: textColor, highlightBackgroundColor: highlightBackgroundColor,
+    backgroundColor: backgroundColor, highlightTextColor: highlightTextColor,
+    status: { separator: 'none', color: textColor, backgroundColor: backgroundColor }
   });
-  
-  // fixture screen
-  liveWind.on('click', 'down', function(e) {
-    var fixtureWind = new UI.Window();
-    var fixtureHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    var fixtureText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    var fixtureInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
-    fixtureHead.position(position(-45));
-    fixtureText.position(position(-5));
-    fixtureInfo.position(position(20));
-    fixtureHead.font(fontLarge);
-    fixtureText.font(fontMedium);
-    fixtureInfo.font(fontXSmall);
-    fixtureHead.text('Fixture');
-    fixtureText.text(fixtureHomeTeam + ' vs ' + fixtureAwayTeam);
-    fixtureInfo.text(fixtureDate);
-    fixtureWind.add(fixtureHead);
-    fixtureWind.add(fixtureText);
-    fixtureWind.add(fixtureInfo);
-    fixtureWind.show();
-    liveWind.hide();
-    fixtureWind.on('click', 'up', function(e) {
-      liveWind.show();
-      fixtureWind.hide();
-    });
+  footballMenu.section(0, { title: "Results" });
+  footballMenu.item(0, 0, { icon: icon, title: window.matchTitle0, subtitle: window.matchSubtitle0 });
+  footballMenu.item(0, 1, { icon: icon, title: window.matchTitle1, subtitle: window.matchSubtitle1 });
+  footballMenu.section(1, { title: "Match Day" });
+  footballMenu.item(1, 0, { icon: icon, title: window.matchTitle2, subtitle: window.matchSubtitle2 });
+  footballMenu.section(2, { title: "Fixtures" });
+  footballMenu.item(2, 0, { icon: icon, title: window.matchTitle3, subtitle: window.matchSubtitle3 });
+  footballMenu.item(2, 1, { icon: icon, title: window.matchTitle4, subtitle: window.matchSubtitle4 });
+  footballMenu.show();
+  mainWind.hide();
+
+  footballMenu.on('select', function(e) {
+    var matchWind = new UI.Window();
+    var matchHead = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var matchText = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    var matchInfo = new UI.Text({size: size, backgroundColor: backgroundColor, textAlign: textAlign});
+    matchHead.position(position(-45));
+    matchText.position(position(-5));
+    matchInfo.position(position(20));
+    matchHead.font(fontLarge);
+    matchText.font(fontMedium);
+    matchInfo.font(fontXSmall);
+    if (e.sectionIndex === 0) {
+      matchHead.text('Result');
+      matchText.text(window["matchTitle" + e.itemIndex]);
+      matchInfo.text(window["matchSubtitle" + e.itemIndex]);
+
+    } else if (e.sectionIndex === 1) {
+      matchHead.text('Live Score');
+      matchText.text(window.matchTitle2);
+      matchInfo.text(window.matchSubtitle2);
+    } else {
+      matchHead.text('Fixture');
+      if (e.itemIndex === 0) {
+        matchText.text(window.matchTitle3);
+        matchInfo.text(window.matchSubtitle3);
+      } else {
+        matchText.text(window.matchTitle4);
+        matchInfo.text(window.matchSubtitle4);
+      }
+    }
+    matchWind.add(matchHead);
+    matchWind.add(matchText);
+    matchWind.add(matchInfo);
+    matchWind.show();
   });
 
 });
@@ -220,16 +197,22 @@ function collectapidata() {
   var url = 'http://api.football-data.org/v1/teams/58/fixtures';
   ajax({ url: url, headers: { 'X-Auth-Token': token }, type: 'json' },
     function(api){
-      var result = api.fixtures.filter(function(val, index, array) {
+      var match1 = api.fixtures.filter(function(val, index, array) {
+        return val.matchday === matchDay - 2;
+      });
+      var match2 = api.fixtures.filter(function(val, index, array) {
         return val.matchday === matchDay - 1;
       });
-      var live = api.fixtures.filter(function(val, index, array) {
+      var match3 = api.fixtures.filter(function(val, index, array) {
         return val.matchday === matchDay;
       });
-      var fixture = api.fixtures.filter(function(val, index, array) {
+      var match4 = api.fixtures.filter(function(val, index, array) {
         return val.matchday === matchDay + 1;
       });
-      var data = result.concat(live).concat(fixture);
+      var match5 = api.fixtures.filter(function(val, index, array) {
+        return val.matchday === matchDay + 2;
+      });
+      var data = match1.concat(match2).concat(match3).concat(match4).concat(match5);
       Settings.data('avfcapi', data);
       //console.log('Collected apidata: ' + data);
     }
