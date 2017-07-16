@@ -3,7 +3,7 @@
 module.exports = [
   {
     "type": "heading",
-    "defaultValue": "AVFC v2.0"
+    "defaultValue": "AVFC v2.1"
   },
   {
     "type": "text",

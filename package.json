@@ -5,12 +5,12 @@
         "pebblejs": "^1.0.0"
     },
     "keywords": [],
-    "name": "avfc-v2.0",
+    "name": "avfc-v2.1",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "AVFC v2.0",
+        "displayName": "AVFC v2.1",
         "enableMultiJS": true,
         "messageKeys": [
             "message_keys"
@@ -66,5 +66,5 @@
             "watchface": false
         }
     },
-    "version": "2.0.0"
+    "version": "2.10.0"
 }

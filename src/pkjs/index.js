@@ -76,7 +76,7 @@ mainWind.on('click', 'down', function(e) {
   downText.position(position(-5));
   downHead.font(fontMedium);
   downText.font(fontSmall);
-  downHead.text('AVFC v2.0');
+  downHead.text('AVFC v2.1');
   downText.text('by Edward Dam');
   downWind.add(downHead);
   downWind.add(downText);
@@ -99,13 +99,17 @@ mainWind.on('click', 'select', function(e) {
     var date = day + '/' + month + ' @' + time;
     var homeTeam = apidata[i].homeTeamName;
     var awayTeam = apidata[i].awayTeamName;
-    if ( homeTeam === "Brighton & Hove Albion") {
-      homeTeam = "BHA";
+    if ( homeTeam === "Sheffield United FC") {
+      homeTeam = "SHU";
+    } else if ( homeTeam === "Sheffield Wednesday") {
+      homeTeam = "SHW";
     } else {
       homeTeam = homeTeam.substr(0, 3).toUpperCase();
     }
-    if ( awayTeam === "Brighton & Hove Albion") {
-      awayTeam = "BHA";
+    if ( awayTeam === "Sheffield United FC") {
+      awayTeam = "SHU";
+    } else if ( awayTeam === "Sheffield Wednesday") {
+      awayTeam = "SHW";
     } else {
       awayTeam = awayTeam.substr(0, 3).toUpperCase();
     }
@@ -183,7 +187,7 @@ mainWind.on('click', 'select', function(e) {
 // functions
 
 function collectmatchdayweek(callback) {
-  var url = 'http://api.football-data.org/v1/competitions/427';
+  var url = 'http://api.football-data.org/v1/competitions/446';
   ajax({ url: url, headers: { 'X-Auth-Token': token }, type: 'json' },
     function(api){
       matchDay = api.currentMatchday;
